@@ -1,0 +1,22 @@
+---
+interface Props {
+  href?: string;
+  class?: string;
+}
+
+const { href, class: className } = Astro.props;
+const Component = href ? 'a' : 'div';
+---
+
+<Component 
+  href={href}
+  class={`group relative bg-cosmic-blue/60 backdrop-blur-sm border border-neural-teal/20 rounded-xl p-6 transition-all duration-300 hover:border-neural-teal hover:shadow-glow-sm hover:-translate-y-1 ${className || ''}`}
+>
+  <!-- Hover glow effect -->
+  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl bg-gradient-to-br from-neural-teal/5 to-golden-core/5 pointer-events-none"></div>
+  
+  <!-- Content -->
+  <div class="relative z-10">
+    <slot />
+  </div>
+</Component>

@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+
+const allInsights = await getCollection('insights');
+const sortedInsights = allInsights.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Get unique domains and applications for filtering
+const allDomains = [...new Set(allInsights.flatMap(i => i.data.cognitive_domains))];
+const allApplications = [...new Set(allInsights.flatMap(i => i.data.ai_applications))];
+---
+
+<BaseLayout title="Insights">
+  <Header />
+  
+  <main class="max-w-7xl mx-auto px-6 py-12">
+    <header class="mb-12 text-center">
+      <h1 class="text-5xl font-display font-bold mb-4 bg-gradient-to-r from-golden-glow to-neural-teal bg-clip-text text-transparent">
+        Insights
+      </h1>
+      <p class="text-xl text-slate-400 max-w-3xl mx-auto">
+        Explore our collection of insights on AI mindfulness, cognitive neuroscience, and human-AI collaboration.
+      </p>
+    </header>
+
+    <!-- Filter Tags -->
+    <div class="mb-12 p-6 bg-cosmic-blue/60 backdrop-blur-sm border border-neural-teal/20 rounded-xl">
+      <h3 class="text-sm font-semibold text-neural-teal mb-4 uppercase tracking-wide">Filter by Topic</h3>
+      
+      <div class="mb-4">
+        <h4 class="text-xs text-slate-400 mb-2 uppercase">Cognitive Domain</h4>
+        <div class="flex flex-wrap gap-2">
+          {allDomains.map(domain => (
+            <span class="px-3 py-1 bg-lavender-soft/20 border border-lavender-soft/40 rounded-full text-sm text-slate-300 hover:bg-lavender-soft/30 transition-colors cursor-pointer">
+              {domain}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs text-slate-400 mb-2 uppercase">AI Application</h4>
+        <div class="flex flex-wrap gap-2">
+          {allApplications.map(app => (
+            <span class="px-3 py-1 bg-neural-teal/20 border border-neural-teal/40 rounded-full text-sm text-slate-300 hover:bg-neural-teal/30 transition-colors cursor-pointer">
+              {app}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Insights Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {sortedInsights.map((insight) => (
+        <Card href={`/insights/${insight.slug}`}>
+          <div class="mb-3 flex items-center gap-2">
+            <span class={`text-xs uppercase tracking-wide font-semibold ${
+              insight.data.difficulty === 'beginner' ? 'text-green-400' :
+              insight.data.difficulty === 'intermediate' ? 'text-golden-glow' :
+              insight.data.difficulty === 'advanced' ? 'text-red-400' :
+              'text-lavender-soft'
+            }`}>
+              {insight.data.difficulty}
+            </span>
+          </div>
+          
+          <h2 class="text-xl font-semibold mb-3 text-slate-100 group-hover:text-neural-teal transition-colors">
+            {insight.data.title}
+          </h2>
+          
+          <p class="text-slate-400 text-sm mb-4 line-clamp-3">
+            {insight.data.excerpt}
+          </p>
+          
+          <div class="flex flex-wrap gap-2 mb-4">
+            {insight.data.cognitive_domains.slice(0, 2).map(domain => (
+              <span class="text-xs px-2 py-1 bg-lavender-soft/20 border border-lavender-soft/30 rounded text-lavender-soft">
+                {domain}
+              </span>
+            ))}
+          </div>
+          
+          <div class="flex items-center gap-4 text-xs text-slate-500 mt-auto">
+            <span>{insight.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+            <span>•</span>
+            <span>{insight.data.readingTime} min read</span>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

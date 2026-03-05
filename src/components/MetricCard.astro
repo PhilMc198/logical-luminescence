@@ -1,0 +1,50 @@
+---
+interface Props {
+  name: string;
+  before: string;
+  after: string;
+  improvement: number;
+  description?: string;
+}
+
+const { name, before, after, improvement, description } = Astro.props;
+---
+
+<div class="metric-card bg-cosmic-blue/80 backdrop-blur-sm border border-neural-teal/20 rounded-xl p-6 hover:border-neural-teal hover:shadow-glow-sm transition-all duration-300">
+  <h4 class="text-lg font-semibold text-neural-teal mb-4 text-center">
+    {name}
+  </h4>
+
+  <div class="flex items-center justify-center gap-4 mb-4">
+    <div class="text-center">
+      <div class="text-xs text-slate-400 uppercase mb-1">Before</div>
+      <div class="text-2xl font-bold text-slate-300">{before}</div>
+    </div>
+
+    <div class="text-3xl text-golden-glow">→</div>
+
+    <div class="text-center">
+      <div class="text-xs text-slate-400 uppercase mb-1">After</div>
+      <div class="text-2xl font-bold text-slate-100">{after}</div>
+    </div>
+  </div>
+
+  <div class="text-center py-4 border-t border-neural-teal/20">
+    <div class="text-4xl font-bold bg-gradient-to-r from-golden-glow to-golden-core bg-clip-text text-transparent">
+      {improvement}%
+    </div>
+    <div class="text-sm text-slate-400">improvement</div>
+  </div>
+
+  {description && (
+    <p class="mt-4 text-sm text-slate-400 italic text-center">
+      {description}
+    </p>
+  )}
+</div>
+
+<style>
+  .metric-card:hover {
+    transform: translateY(-4px);
+  }
+</style>

@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import MetricCard from '../../components/MetricCard.astro';
+
+export async function getStaticPaths() {
+  const caseStudies = await getCollection('case-studies');
+  return caseStudies.map(study => ({
+    params: { slug: study.slug },
+    props: { study },
+  }));
+}
+
+const { study } = Astro.props;
+const { Content } = await study.render();
+---
+
+<BaseLayout title={study.data.title} description={study.data.challenge}>
+  <Header />
+  
+  <main class="max-w-5xl mx-auto px-6 py-12">
+    <article>
+      <!-- Header -->
+      <header class="mb-12">
+        <div class="mb-4">
+          <span class="inline-block text-xs uppercase tracking-wide font-semibold px-3 py-1 rounded bg-golden-glow/20 text-golden-glow">
+            Case Study
+          </span>
+        </div>
+        
+        <h1 class="text-5xl font-display font-bold mb-6 bg-gradient-to-r from-golden-glow to-neural-teal bg-clip-text text-transparent">
+          {study.data.title}
+        </h1>
+        
+        <div class="flex flex-wrap gap-4 text-slate-400 mb-6">
+          <span class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            <span><strong>Industry:</strong> {study.data.industry}</span>
+          </span>
+          <span class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <span><strong>Size:</strong> {study.data.company_size}</span>
+          </span>
+          {study.data.duration_weeks && (
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span><strong>Duration:</strong> {study.data.duration_weeks} weeks</span>
+            </span>
+          )}
+        </div>
+      </header>
+
+      <!-- Challenge Section -->
+      <section class="mb-12 p-8 bg-cosmic-blue/60 backdrop-blur-sm border border-red-400/20 rounded-2xl">
+        <h2 class="text-3xl font-display font-semibold text-red-400 mb-4">The Challenge</h2>
+        <p class="text-lg text-slate-300 mb-4">{study.data.challenge}</p>
+      </section>
+
+      <!-- Solution Section -->
+      <section class="mb-12 p-8 bg-cosmic-blue/60 backdrop-blur-sm border border-neural-teal/20 rounded-2xl">
+        <h2 class="text-3xl font-display font-semibold text-neural-teal mb-4">The Solution</h2>
+        <p class="text-lg text-slate-300 mb-6">{study.data.solution}</p>
+        
+        {/* AI Tools Used */}
+        {study.data.ai_tools.length > 0 && (
+          <div class="mt-6">
+            <h3 class="text-lg font-semibold text-slate-200 mb-3">AI Tools & Technology</h3>
+            <div class="flex flex-wrap gap-2">
+              {study.data.ai_tools.map(tool => (
+                <span class="px-3 py-1 bg-blue-500/20 border border-blue-500/40 rounded-full text-sm text-blue-300">
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
+      <!-- Results & Metrics -->
+      <section class="mb-12">
+        <h2 class="text-3xl font-display font-semibold text-center mb-8 bg-gradient-to-r from-golden-glow to-neural-teal bg-clip-text text-transparent">
+          Results & Impact
+        </h2>
+        
+        <div class="mb-8 p-6 bg-gradient-to-r from-golden-core/20 to-golden-glow/20 border border-golden-glow/40 rounded-xl text-center">
+          <p class="text-xl text-slate-100 font-semibold">{study.data.outcome}</p>
+        </div>
+
+        {study.data.metrics.length > 0 && (
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {study.data.metrics.map(metric => (
+              <MetricCard
+                name={metric.name}
+                before={metric.before}
+                after={metric.after}
+                improvement={metric.improvement}
+                description={metric.description}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <!-- Key Takeaways -->
+      {study.data.key_takeaways.length > 0 && (
+        <section class="mb-12 p-8 bg-cosmic-blue/60 backdrop-blur-sm border border-lavender-soft/20 rounded-2xl">
+          <h2 class="text-3xl font-display font-semibold text-lavender-soft mb-6">Key Takeaways</h2>
+          <ul class="space-y-4">
+            {study.data.key_takeaways.map(takeaway => (
+              <li class="flex gap-3">
+                <span class="text-2xl flex-shrink-0">💡</span>
+                <p class="text-slate-300 leading-relaxed">{takeaway}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <!-- Full Content -->
+      <div class="prose prose-invert prose-lg max-w-none
+        prose-headings:font-display prose-headings:text-neural-teal
+        prose-p:text-slate-300
+        prose-a:text-golden-glow hover:prose-a:text-golden-core
+        prose-strong:text-slate-200
+        prose-ul:text-slate-300 prose-li:marker:text-neural-teal
+      ">
+        <Content />
+      </div>
+    </article>
+  </main>
+
+  <Footer />
+</BaseLayout>
