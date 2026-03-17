@@ -1,181 +1,294 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import Card from '../components/Card.astro';
-import { getCollection } from 'astro:content';
+import { getAllEssays, getFeaturedEssays } from '../utils/content';
+import { readingTime, readingTimeLabel } from '../utils/readingTime';
 
-// Get featured insights
-const allInsights = await getCollection('insights');
-const featuredInsights = allInsights
-  .filter(insight => insight.data.featured)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
+const essays = await getAllEssays();
+const featured = essays.slice(0, 3);
+
+const pillarLabels: Record<string, string> = {
+  'inner-life':            'The inner life',
+  'technological-reality': 'Technological reality',
+  'power-and-economy':     'Power and economy',
+  'adaptation-and-agency': 'Adaptation and agency',
+};
 ---
 
-<BaseLayout title="Home">
-  <Header />
-  
-  <main>
-    <!-- Hero Section -->
-    <section class="max-w-7xl mx-auto px-6 py-20">
-      <div class="grid md:grid-cols-2 gap-12 items-center">
-        <div>
-          <h1 class="text-5xl md:text-6xl font-display font-bold mb-6">
-            <span class="block bg-gradient-to-r from-golden-glow via-golden-core to-neural-teal bg-clip-text text-transparent">
-              Logical Luminescence
-            </span>
-          </h1>
-          <p class="text-2xl text-slate-300 mb-6">
-            Illuminating the intersection of human cognition and artificial intelligence
-          </p>
-          <p class="text-lg text-slate-400 mb-8">
-            Explore how understanding the brain's Default Mode Network can transform your collaboration with AI systems—creating mindful, effective, and sustainable human-AI partnerships.
-          </p>
-          <div class="flex gap-4">
-            <a href="/insights" class="px-6 py-3 bg-gradient-to-r from-golden-core to-golden-glow rounded-lg text-cosmic-deep font-semibold hover:shadow-glow-md transition-all duration-300">
-              Explore Insights
-            </a>
-            <a href="/frameworks" class="px-6 py-3 border-2 border-neural-teal text-neural-teal rounded-lg font-semibold hover:bg-neural-teal/10 transition-all duration-300">
-              View Frameworks
-            </a>
-          </div>
-        </div>
+<BaseLayout
+  title="Logical Luminescence"
+  description="Exploring the inner life, the technological reality, and the political stakes of a world transformed by AI."
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container--narrow">
+      <p class="eyebrow">Logical Luminescence</p>
+      <h1 class="hero-title">
+        Finding your footing<br />
+        in a world being<br />
+        <em>remade by machines</em>
+      </h1>
+      <p class="hero-sub">
+        AI and autonomous systems are not just changing what we do. They are changing
+        who holds power, how wealth flows, and what it means to live a free and
+        considered life. This site explores what it takes to stay oriented — inwardly,
+        technologically, and politically.
+      </p>
+      <div class="hero-actions">
+        <a href="/start-here" class="btn btn--primary">Start here</a>
+        <a href="/essays" class="btn btn--ghost">Read the essays</a>
+      </div>
+    </div>
+  </section>
 
-        <!-- Cosmic Sphere Visualization -->
-        <div class="relative h-96 flex items-center justify-center">
-          <div class="relative">
-            <!-- Core -->
-            <div class="w-32 h-32 bg-gradient-to-br from-golden-core to-golden-glow rounded-full blur-sm animate-pulse"></div>
-            
-            <!-- Rings -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="w-48 h-48 border-2 border-neural-teal/30 rounded-full animate-spin-slow"></div>
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="w-64 h-64 border border-lavender-soft/20 rounded-full animate-spin-slower"></div>
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="w-80 h-80 border border-neural-teal/10 rounded-full animate-spin-slowest"></div>
-            </div>
-          </div>
+  <hr class="divider" />
+
+  <!-- Four pillars -->
+  <section class="pillars-section">
+    <div class="container">
+      <p class="eyebrow" style="margin-bottom: 1.75rem;">Four themes</p>
+      <div class="pillar-grid">
+        <div class="pillar">
+          <div class="pillar-num">I</div>
+          <div class="pillar-title">The inner life</div>
+          <p class="pillar-body">Contemplative practice and self-knowledge as navigation tools, not retreats from the world.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">II</div>
+          <div class="pillar-title">The technological reality</div>
+          <p class="pillar-body">Honest assessment of AI — what it is, what it isn't, and what its proliferation actually means.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">III</div>
+          <div class="pillar-title">Power and political economy</div>
+          <p class="pillar-body">Wealth concentration, democratic strain, and what history suggests tends to follow.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">IV</div>
+          <div class="pillar-title">Adaptation and agency</div>
+          <p class="pillar-body">How individuals and communities find genuine footing and flourishing within the transition.</p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Core Concepts -->
-    <section class="max-w-7xl mx-auto px-6 py-20">
-      <h2 class="text-4xl font-display font-bold text-center mb-12 bg-gradient-to-r from-golden-glow to-neural-teal bg-clip-text text-transparent">
-        Understanding the Foundation
-      </h2>
-      
-      <div class="grid md:grid-cols-3 gap-8">
-        <Card>
-          <div class="text-4xl mb-4">🧠</div>
-          <h3 class="text-xl font-semibold text-neural-teal mb-3">The Default Mode Network</h3>
-          <p class="text-slate-400 mb-4">
-            Discover how your brain's "idle mode" shapes creativity, self-awareness, and how you think about thinking.
-          </p>
-          <a href="/insights" class="text-golden-glow hover:text-golden-core transition-colors inline-flex items-center gap-2">
-            Learn More
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-        </Card>
+  <hr class="divider" />
 
-        <Card>
-          <div class="text-4xl mb-4">🤖</div>
-          <h3 class="text-xl font-semibold text-neural-teal mb-3">AI Attention Mechanisms</h3>
-          <p class="text-slate-400 mb-4">
-            Explore parallels between AI's attention systems and human cognitive focus—and what it means for collaboration.
-          </p>
-          <a href="/insights" class="text-golden-glow hover:text-golden-core transition-colors inline-flex items-center gap-2">
-            Learn More
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-        </Card>
-
-        <Card>
-          <div class="text-4xl mb-4">🔄</div>
-          <h3 class="text-xl font-semibold text-neural-teal mb-3">Mindful Integration</h3>
-          <p class="text-slate-400 mb-4">
-            Practical strategies for maintaining cognitive health while working alongside AI systems daily.
-          </p>
-          <a href="/exercises" class="text-golden-glow hover:text-golden-core transition-colors inline-flex items-center gap-2">
-            Start Practicing
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-        </Card>
+  <!-- Essays -->
+  <section class="essays-section">
+    <div class="container">
+      <div class="essays-header">
+        <p class="eyebrow">Recent essays</p>
+        <a href="/essays" class="essays-all">All essays →</a>
       </div>
-    </section>
+      {featured.length > 0 ? (
+        <ul class="essay-list" role="list">
+          {featured.map((essay) => {
+            const mins = essay.data.readingTimeOverride ?? readingTime(essay.body ?? '');
+            const pillarLabel = essay.data.pillar ? pillarLabels[essay.data.pillar] : null;
+            return (
+              <li class="essay-row">
+                <a href={`/essays/${essay.id}`} class="essay-link">
+                  <div class="essay-main">
+                    <span class="essay-title">{essay.data.title}</span>
+                    {essay.data.description && (
+                      <span class="essay-desc">{essay.data.description}</span>
+                    )}
+                  </div>
+                  <div class="essay-meta">
+                    {readingTimeLabel(mins)}
+                    {pillarLabel && <span class="essay-pillar">{pillarLabel}</span>}
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p class="essays-empty">Essays coming soon.</p>
+      )}
+    </div>
+  </section>
 
-    <!-- Featured Insights -->
-    {featuredInsights.length > 0 && (
-      <section class="max-w-7xl mx-auto px-6 py-20">
-        <h2 class="text-4xl font-display font-bold text-center mb-12 bg-gradient-to-r from-golden-glow to-neural-teal bg-clip-text text-transparent">
-          Featured Insights
-        </h2>
-        
-        <div class="grid md:grid-cols-3 gap-8">
-          {featuredInsights.map((insight) => (
-            <Card href={`/insights/${insight.slug}`}>
-              <div class="mb-3">
-                <span class="text-xs uppercase tracking-wide text-neural-teal font-semibold">
-                  {insight.data.difficulty}
-                </span>
-              </div>
-              <h3 class="text-xl font-semibold mb-3 text-slate-100 group-hover:text-neural-teal transition-colors">
-                {insight.data.title}
-              </h3>
-              <p class="text-slate-400 text-sm mb-4">
-                {insight.data.excerpt}
-              </p>
-              <div class="flex items-center gap-4 text-xs text-slate-500">
-                <span>{insight.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                <span>•</span>
-                <span>{insight.data.readingTime} min read</span>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        <div class="text-center mt-12">
-          <a href="/insights" class="inline-block px-6 py-3 bg-gradient-to-r from-golden-core to-golden-glow rounded-lg text-cosmic-deep font-semibold hover:shadow-glow-md transition-all duration-300">
-            View All Insights
-          </a>
-        </div>
-      </section>
-    )}
-  </main>
-
-  <Footer />
+  <!-- Pull quote -->
+  <section class="quote-section">
+    <div class="container--narrow">
+      <blockquote class="site-pull-quote">
+        The examined life, in an automated world, is not a luxury. It is a navigational tool.
+      </blockquote>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  @keyframes spin-slow {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+  /* Hero */
+  .hero {
+    padding: 5rem 0 4rem;
   }
-  @keyframes spin-slower {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
+
+  .hero-title {
+    margin: 1.25rem 0 1.5rem;
+    line-height: 1.1;
   }
-  @keyframes spin-slowest {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+
+  .hero-title em { font-style: italic; }
+
+  .hero-sub {
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    font-size: 1.0625rem;
+    line-height: 1.8;
   }
-  .animate-spin-slow {
-    animation: spin-slow 20s linear infinite;
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
   }
-  .animate-spin-slower {
-    animation: spin-slower 30s linear infinite;
+
+  /* Pillars */
+  .pillars-section {
+    padding: 3rem 0;
   }
-  .animate-spin-slowest {
-    animation: spin-slowest 40s linear infinite;
+
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--color-border);
+    border: 0.5px solid var(--color-border);
+  }
+
+  .pillar {
+    background: var(--color-ground);
+    padding: 1.5rem;
+  }
+
+  .pillar-num {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    color: var(--color-border);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .pillar-title {
+    font-size: 13px;
+    color: var(--color-ink);
+    margin-bottom: 0.4rem;
+    font-weight: 400;
+  }
+
+  .pillar-body {
+    font-size: 12px;
+    color: var(--color-ink-muted);
+    line-height: 1.65;
+  }
+
+  /* Essays */
+  .essays-section {
+    padding: 3rem 0;
+  }
+
+  .essays-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
+  }
+
+  .essays-all {
+    font-size: 12px;
+    color: var(--color-ink-muted);
+    transition: color 0.15s;
+  }
+
+  .essays-all:hover { color: var(--color-ink); }
+
+  .essay-list {
+    list-style: none;
+  }
+
+  .essay-row {
+    border-bottom: 0.5px solid var(--color-border-mid);
+  }
+
+  .essay-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 1.1rem 0;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .essay-link:hover { opacity: 0.7; }
+
+  .essay-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .essay-title {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    color: var(--color-ink);
+    font-weight: 400;
+  }
+
+  .essay-desc {
+    font-size: 12px;
+    color: var(--color-ink-muted);
+    line-height: 1.5;
+  }
+
+  .essay-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .essay-pillar {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .essays-empty {
+    color: var(--color-ink-faint);
+    font-size: 14px;
+    padding: 1rem 0;
+  }
+
+  /* Pull quote */
+  .quote-section {
+    padding: 3rem 0 4rem;
+  }
+
+  .site-pull-quote {
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    color: var(--color-ink-mid);
+    line-height: 1.55;
+    border-left: 2px solid var(--color-border);
+    padding: 0.4rem 0 0.4rem 1.5rem;
+    font-weight: 400;
+  }
+
+  /* Responsive */
+  @media (max-width: 560px) {
+    .pillar-grid { grid-template-columns: 1fr; }
+    .essay-link { flex-direction: column; gap: 0.4rem; }
+    .essay-meta { align-items: flex-start; flex-direction: row; gap: 0.75rem; }
   }
 </style>

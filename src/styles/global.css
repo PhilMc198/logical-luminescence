@@ -1,1 +1,216 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400&display=swap');
+
+/* ─── Design tokens ─────────────────────────────────────────────────────── */
+
+:root {
+  --color-ground:     #f5f3ee;
+  --color-surface:    #eceae4;
+  --color-border:     #c8c6be;
+  --color-border-mid: #d8d6cf;
+  --color-ink:        #1a1a18;
+  --color-ink-mid:    #4a4843;
+  --color-ink-muted:  #6b6962;
+  --color-ink-faint:  #9b9890;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans:  'DM Sans', system-ui, sans-serif;
+
+  --measure:    680px;
+  --measure-md: 800px;
+
+  --space-xs:  0.5rem;
+  --space-sm:  1rem;
+  --space-md:  1.5rem;
+  --space-lg:  2.5rem;
+  --space-xl:  4rem;
+  --space-2xl: 6rem;
+}
+
+/* ─── Reset ─────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── Base ──────────────────────────────────────────────────────────────── */
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  background: var(--color-ground);
+  color: var(--color-ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main { flex: 1; }
+
+/* ─── Typography ────────────────────────────────────────────────────────── */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--color-ink);
+}
+
+h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+h3 { font-size: 1.25rem; }
+
+p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--color-ink-mid);
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ─── Prose (essay/page body content) ──────────────────────────────────── */
+
+.prose {
+  max-width: var(--measure);
+}
+
+.prose p {
+  margin-bottom: 1.4rem;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  color: var(--color-ink-mid);
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  margin: 2.5rem 0 1rem;
+  color: var(--color-ink);
+}
+
+.prose h3 {
+  font-size: 1.15rem;
+  margin: 2rem 0 0.75rem;
+  color: var(--color-ink);
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.4rem;
+}
+
+.prose li {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--color-ink-mid);
+  margin-bottom: 0.4rem;
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--color-border);
+  padding: 0.4rem 0 0.4rem 1.25rem;
+  margin: 2rem 0;
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--color-ink-mid);
+  line-height: 1.6;
+}
+
+.prose hr {
+  border: none;
+  border-top: 0.5px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ─── Utilities ─────────────────────────────────────────────────────────── */
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+
+.container {
+  max-width: var(--measure-md);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.container--narrow {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.divider {
+  border: none;
+  border-top: 0.5px solid var(--color-border);
+}
+
+.pull-quote {
+  border-left: 2px solid var(--color-border);
+  padding: 0.4rem 0 0.4rem 1.25rem;
+  margin: 2rem 0;
+}
+
+.pull-quote p {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--color-ink-mid);
+  line-height: 1.6;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  padding: 0.6rem 1.5rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  text-decoration: none;
+}
+
+.btn:hover { opacity: 0.8; }
+
+.btn--primary {
+  background: var(--color-ink);
+  color: var(--color-ground);
+  border: none;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-ink-mid);
+  border: 0.5px solid var(--color-border);
+}
+
+/* ─── Pillar badge ──────────────────────────────────────────────────────── */
+
+.pillar-badge {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  border: 0.5px solid var(--color-border-mid);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+/* ─── Responsive ────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .container, .container--narrow {
+    padding: 0 var(--space-sm);
+  }
+}

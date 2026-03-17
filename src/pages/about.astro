@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPage } from '../utils/content';
+
+const page = await getPage('about');
+
+if (!page) {
+  return Astro.redirect('/');
+}
+
+const { Content } = await page.render();
+---
+
+<BaseLayout
+  title={`${page.data.title} — Logical Luminescence`}
+  description={page.data.description}
+>
+  <article class="page-article">
+    <div class="container--narrow">
+
+      <header class="page-header">
+        <p class="eyebrow">About</p>
+        <h1 class="page-title">{page.data.title}</h1>
+        {page.data.pullquote && (
+          <div class="pull-quote">
+            <p>{page.data.pullquote}</p>
+          </div>
+        )}
+      </header>
+
+      <hr class="divider" style="margin: 2rem 0;" />
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <div class="page-cta">
+        <a href="/start-here" class="btn btn--primary">Start here</a>
+        <a href="/essays" class="btn btn--ghost">Read the essays</a>
+      </div>
+
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page-article {
+    padding: 4rem 0 5rem;
+  }
+
+  .page-header {
+    margin-bottom: 0;
+  }
+
+  .page-title {
+    margin: 1rem 0 1.5rem;
+    font-style: italic;
+  }
+
+  .page-cta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+  }
+</style>

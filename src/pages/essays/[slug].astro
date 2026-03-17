@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllEssays } from '../../utils/content';
+import { readingTime, readingTimeLabel } from '../../utils/readingTime';
+
+export async function getStaticPaths() {
+  const essays = await getAllEssays();
+  return essays.map((essay) => ({
+    params: { slug: essay.id },
+    props: { essay },
+  }));
+}
+
+const { essay } = Astro.props;
+const { Content } = await essay.render();
+
+const mins = essay.data.readingTimeOverride ?? readingTime(essay.body ?? '');
+
+const pillarLabels: Record<string, string> = {
+  'inner-life':            'The inner life',
+  'technological-reality': 'Technological reality',
+  'power-and-economy':     'Power and economy',
+  'adaptation-and-agency': 'Adaptation and agency',
+};
+
+const pillarLabel = essay.data.pillar ? pillarLabels[essay.data.pillar] : null;
+
+const date = essay.data.publishedAt.toLocaleDateString('en-AU', {
+  year: 'numeric', month: 'long', day: 'numeric'
+});
+---
+
+<BaseLayout
+  title={`${essay.data.title} — Logical Luminescence`}
+  description={essay.data.description}
+  ogImage={essay.data.ogImage}
+>
+  <article class="essay-article">
+    <div class="container--narrow">
+
+      <header class="essay-header">
+        <div class="essay-meta-top">
+          {pillarLabel && <span class="pillar-badge">{pillarLabel}</span>}
+          <span class="essay-date">{date}</span>
+          <span class="essay-reading-time">{readingTimeLabel(mins)}</span>
+        </div>
+        <h1 class="essay-title">{essay.data.title}</h1>
+        {essay.data.subtitle && (
+          <p class="essay-subtitle">{essay.data.subtitle}</p>
+        )}
+        {essay.data.pullquote && (
+          <div class="pull-quote">
+            <p>{essay.data.pullquote}</p>
+          </div>
+        )}
+      </header>
+
+      <hr class="divider" style="margin: 2rem 0;" />
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <footer class="essay-footer">
+        <hr class="divider" style="margin: 2.5rem 0 1.5rem;" />
+        <a href="/essays" class="back-link">← All essays</a>
+      </footer>
+
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .essay-article {
+    padding: 4rem 0 5rem;
+  }
+
+  .essay-meta-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .essay-date,
+  .essay-reading-time {
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.04em;
+  }
+
+  .essay-title {
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
+  }
+
+  .essay-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--color-ink-muted);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+
+  .back-link {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+    transition: color 0.15s;
+  }
+
+  .back-link:hover { color: var(--color-ink); }
+</style>

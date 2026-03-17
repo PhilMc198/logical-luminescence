@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllEssays } from '../../utils/content';
+import { readingTime, readingTimeLabel } from '../../utils/readingTime';
+
+const essays = await getAllEssays();
+
+const pillarLabels: Record<string, string> = {
+  'inner-life':            'The inner life',
+  'technological-reality': 'Technological reality',
+  'power-and-economy':     'Power and economy',
+  'adaptation-and-agency': 'Adaptation and agency',
+};
+---
+
+<BaseLayout
+  title="Essays — Logical Luminescence"
+  description="Long-form writing on the inner life, technology, power, and adaptation in an age of AI."
+>
+  <section class="essays-page">
+    <div class="container">
+
+      <header class="essays-header">
+        <p class="eyebrow">Essays</p>
+        <h1 class="essays-title">Writing</h1>
+        <p class="essays-intro">
+          Long-form thinking on the four themes: the inner life, the technological
+          reality, power and political economy, and adaptation and agency.
+        </p>
+      </header>
+
+      <hr class="divider" style="margin: 2.5rem 0;" />
+
+      {essays.length > 0 ? (
+        <ul class="essay-list" role="list">
+          {essays.map((essay) => {
+            const mins = essay.data.readingTimeOverride ?? readingTime(essay.body ?? '');
+            const pillarLabel = essay.data.pillar ? pillarLabels[essay.data.pillar] : null;
+            const date = essay.data.publishedAt.toLocaleDateString('en-AU', {
+              year: 'numeric', month: 'long', day: 'numeric'
+            });
+            return (
+              <li class="essay-row">
+                <a href={`/essays/${essay.id}`} class="essay-link">
+                  <div class="essay-main">
+                    {pillarLabel && (
+                      <span class="pillar-badge">{pillarLabel}</span>
+                    )}
+                    <span class="essay-title">{essay.data.title}</span>
+                    {essay.data.description && (
+                      <span class="essay-desc">{essay.data.description}</span>
+                    )}
+                  </div>
+                  <div class="essay-meta">
+                    <span>{readingTimeLabel(mins)}</span>
+                    <span>{date}</span>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p class="essays-empty">Essays coming soon.</p>
+      )}
+
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .essays-page {
+    padding: 4rem 0 5rem;
+  }
+
+  .essays-header {
+    max-width: 540px;
+  }
+
+  .essays-title {
+    margin: 0.75rem 0 1rem;
+    font-style: italic;
+  }
+
+  .essays-intro {
+    font-size: 1rem;
+    color: var(--color-ink-muted);
+    line-height: 1.75;
+  }
+
+  .essay-list {
+    list-style: none;
+  }
+
+  .essay-row {
+    border-bottom: 0.5px solid var(--color-border-mid);
+  }
+
+  .essay-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2rem;
+    padding: 1.25rem 0;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .essay-link:hover { opacity: 0.7; }
+
+  .essay-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .essay-title {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--color-ink);
+    font-weight: 400;
+  }
+
+  .essay-desc {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+    line-height: 1.5;
+  }
+
+  .essay-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .essays-empty {
+    color: var(--color-ink-faint);
+    font-size: 14px;
+    padding: 1rem 0;
+  }
+
+  @media (max-width: 560px) {
+    .essay-link { flex-direction: column; gap: 0.5rem; }
+    .essay-meta { align-items: flex-start; flex-direction: row; gap: 1rem; }
+  }
+</style>
